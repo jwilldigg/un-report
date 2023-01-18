@@ -108,3 +108,38 @@ join_co2_pop <- inner_join(co2_2005, gapminder_data_2007)
 #write csv
 
 write_csv(join_co2_pop, file = "data/joined_co2_pop.csv")
+
+# Read in csv we just wrote
+
+joined_co2_pop <- read.csv("data/joined_co2_pop.csv")
+view(joined_co2_pop)
+
+#create histogram for gdpPer cap and LifeExp to explore distrubution
+ggplot(data = joined_co2_pop)
+
+ggplot(data = joined_co2_pop, aes(x = gdpPercap)) + geom_histogram() +
+  labs (x= "GDP per Capita", y = "Frequency")
+
+ggplot(data = joined_co2_pop, aes(x = lifeExp)) + geom_histogram(color= "white", fill = "pink") +
+  labs(x= "Life Expectancy", y = "Frequency")
+
+joined_co2_pop %>%
+  ggplot(aes(x=gdpPercap, y=per_capita)) + geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) +
+  labs( x = "GDP Per Capita", y = "Emissions Per Capita (metric tons", title = "Comparing C02 Emissions per Capita to GDP Per Capita") +
+  theme_classic()
+
+install.packages("ggpubr")
+
+gdp_c02_plot <- joined_co2_pop %>%
+  ggplot(aes(x=gdpPercap, y=per_capita)) + geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) +
+  labs( x = "GDP Per Capita", y = "Emissions Per Capita (metric tons", title = "Comparing C02 Emissions per Capita to GDP Per Capita") +
+  theme_classic() +
+  ggpubr::stat_regline_equation()
+
+ggsave(gdp_c02_plot, filename = "figures/gdp_vs_co2_plot.png", height = 4, width = 6, units = "in", dpi = 300)
+
+
+                              
+                                
